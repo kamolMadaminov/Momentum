@@ -8,7 +8,11 @@
 import Foundation
 
 class HabitsDM: ObservableObject {
-    @Published var items = [HabitDM]()
+    @Published var items = [HabitDM]() {
+        didSet{
+            save()
+        }
+    }
     
     init(){
         if let data = UserDefaults.standard.data(forKey: "habits") {
