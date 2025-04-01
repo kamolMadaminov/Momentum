@@ -8,14 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var habits = HabitsDM()
+    @State private var showAddHabitView = false
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack{
+            List{
+                ForEach(habits.items){ habit in
+                    NavigationLink(destination: HabitDetailView(habits: habits, habit: habit)){
+                        VStack(alignment: .leading){
+                            Text(habit.title)
+                                .font(.headline)
+                            Text(habit.description ?? "")
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Habits")
+            .toolbar {
+                Button(){
+                    showAddHabitView = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+            .sheet(isPresented: $showAddHabitView) {
+                AddHabitView(habits: habits)
+            }
         }
-        .padding()
     }
 }
 
